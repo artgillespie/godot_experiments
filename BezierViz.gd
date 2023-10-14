@@ -18,9 +18,6 @@ var _colors = [Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW]
 var animate: bool = false
 @export var NUM_SEGMENTS: int = 10
 
-
-
-
 func _ready():
 	_add_control_point(CONTROL_POINT_A, 0, "A")
 	_add_control_point(CONTROL_POINT_B, 1, "B")

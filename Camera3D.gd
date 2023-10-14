@@ -60,7 +60,6 @@ func _input(e: InputEvent):
 			DISTANCE += 0.1
 		if e.button_index == MOUSE_BUTTON_LEFT and e.shift_pressed:
 			# pick a new point of interest
-			
 			pass
 		return
 	if e is InputEventPanGesture:
