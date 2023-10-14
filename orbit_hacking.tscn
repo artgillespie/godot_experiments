@@ -1,0 +1,53 @@
+[gd_scene load_steps=9 format=3 uid="uid://cwleaj832623c"]
+
+[ext_resource type="Texture2D" uid="uid://hmpw546lyvhc" path="res://addons/kenney_prototype_textures/dark/texture_01.png" id="1_bt67m"]
+[ext_resource type="Script" path="res://orbit_hacking.gd" id="1_rujoh"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nuhhs"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_sppjf"]
+sky_material = SubResource("ProceduralSkyMaterial_nuhhs")
+
+[sub_resource type="Environment" id="Environment_67muh"]
+background_mode = 2
+sky = SubResource("Sky_sppjf")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m0c48"]
+albedo_texture = ExtResource("1_bt67m")
+uv1_scale = Vector3(37, 25, 1)
+uv1_offset = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wacpj"]
+material = SubResource("StandardMaterial3D_m0c48")
+size = Vector3(100, 1, 100)
+
+[sub_resource type="BoxMesh" id="BoxMesh_asf6s"]
+
+[node name="OrbitHacking" type="Node3D"]
+script = ExtResource("1_rujoh")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_67muh")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, -5.95417e-16, 2.4663e-16, 2.4663e-16, 0.707107, 0.707107, -5.95416e-16, -0.707107, 0.707107, 10, 8, 17)
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, -0.5, 2.08165e-12)
+mesh = SubResource("BoxMesh_wacpj")
+
+[node name="Cube" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.5, 10)
+mesh = SubResource("BoxMesh_asf6s")
+
+[node name="OrbitingCube" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.5, 12)
+mesh = SubResource("BoxMesh_asf6s")

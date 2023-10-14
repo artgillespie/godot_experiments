@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://cjq37iieookjt"]
+
+[ext_resource type="Script" path="res://control_point.gd" id="1_as8t1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sfb08"]
+size = Vector2(0.6, 0.6)
+
+[node name="ControlPoint" type="Node2D"]
+script = ExtResource("1_as8t1")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_sfb08")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_left = -31.0
+offset_top = -21.0
+offset_right = 9.0
+offset_bottom = 24.0
+text = "A"
+
+[connection signal="input_event" from="Area2D" to="." method="_on_area_2d_input_event"]
+[connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]

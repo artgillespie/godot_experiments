@@ -1,0 +1,95 @@
+[gd_scene load_steps=15 format=3 uid="uid://ckrhqalaloppx"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_pki4k"]
+[ext_resource type="Material" uid="uid://ctnw417lldvaw" path="res://mat_gizmo_green.tres" id="2_hxb88"]
+[ext_resource type="Texture2D" uid="uid://hmpw546lyvhc" path="res://addons/kenney_prototype_textures/dark/texture_01.png" id="2_un22j"]
+[ext_resource type="Script" path="res://Camera3D.gd" id="2_y68gb"]
+[ext_resource type="PackedScene" uid="uid://djfl620ctbvmb" path="res://ui.tscn" id="3_t6jel"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1aqid"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_40mr7"]
+sky_material = SubResource("ProceduralSkyMaterial_1aqid")
+
+[sub_resource type="Environment" id="Environment_qb1og"]
+background_mode = 2
+sky = SubResource("Sky_40mr7")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n8cvs"]
+albedo_texture = ExtResource("2_un22j")
+uv1_scale = Vector3(10, 10, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_egsa2"]
+material = SubResource("StandardMaterial3D_n8cvs")
+size = Vector3(160, 1, 160)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cbjfg"]
+size = Vector3(160, 1, 160)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4dcsn"]
+material = ExtResource("2_hxb88")
+top_radius = 0.01
+bottom_radius = 0.01
+height = 1.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_fwssi"]
+material = ExtResource("2_hxb88")
+top_radius = 0.0
+bottom_radius = 0.02
+height = 0.25
+
+[sub_resource type="BoxMesh" id="BoxMesh_x1kkc"]
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_pki4k")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_qb1og")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, -0.5, 2.08165e-12)
+mesh = SubResource("BoxMesh_egsa2")
+
+[node name="Area3D" type="Area3D" parent="Floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/Area3D"]
+shape = SubResource("BoxShape3D_cbjfg")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, -5.95416e-16, 2.4663e-16, 2.4663e-16, 0.707107, 0.707107, -5.95416e-16, -0.707107, 0.707107, 2.08165e-12, 15, 15)
+script = ExtResource("2_y68gb")
+
+[node name="Gizmo" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0406184, 0)
+
+[node name="Y" type="Node3D" parent="Gizmo"]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Gizmo/Y"]
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_4dcsn")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Gizmo/Y"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 0.75, 2.08165e-12)
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_fwssi")
+
+[node name="Cube" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.5, -10)
+mesh = SubResource("BoxMesh_x1kkc")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UI" parent="CanvasLayer" instance=ExtResource("3_t6jel")]
+
+[node name="Procedural" type="Node3D" parent="."]
+
+[connection signal="input_event" from="Floor/Area3D" to="." method="_on_area_3d_input_event"]
