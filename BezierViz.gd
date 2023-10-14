@@ -177,7 +177,7 @@ func _draw_line_mesh(pt_a: Vector2, pt_b: Vector2, width: float, vertices: Packe
 	uvs.push_back(Vector2(0.0, 0.0))
 	vertices.push_back(vt_2)
 	uvs.push_back(Vector2(1.0, 0.0))
-	vertices.push_back(vt_3)	
+	vertices.push_back(vt_3)
 	uvs.push_back(Vector2(1.0, 1.0))
 	
 func _draw_control_point_line(pt_a: Vector2, pt_b: Vector2, color: Color = Color.MEDIUM_PURPLE) -> Vector2:
