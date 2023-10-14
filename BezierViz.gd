@@ -106,7 +106,7 @@ func _draw_frame():
 			# _draw_line_triangles(prev_pt, pt, Color.GREEN, LINE_WIDTH)
 			
 			## prepare mesh for rendering below
-			_draw_line_mesh(prev_pt, pt, LINE_WIDTH, vertices, uvs)
+			_draw_line_mesh(prev_pt, pt, LINE_WIDTH, i, vertices, uvs)
 			prev_pt = pt
 		
 		# render mesh
@@ -154,8 +154,9 @@ func _draw_line_triangles(pt_a: Vector2, pt_b: Vector2, color: Color, width: flo
 	draw_line(vt_2, vt_3, color, line_w)
 	draw_line(vt_3, vt_0, color, line_w)
 	
-func _draw_line_mesh(pt_a: Vector2, pt_b: Vector2, width: float, vertices: PackedVector2Array, uvs: PackedVector2Array):
-
+func _draw_line_mesh(pt_a: Vector2, pt_b: Vector2, width: float, idx: int, vertices: PackedVector2Array, uvs: PackedVector2Array):
+	# N.B. we set UV.x for the entire length of the line, not per-segment
+	# i.e., segment_index/NUM_SEGMENTS
 	var vec = pt_b - pt_a
 	var norm = Vector2(-vec.y, vec.x).normalized()
 	var vt_0 = pt_a + norm*width*0.5
@@ -164,21 +165,23 @@ func _draw_line_mesh(pt_a: Vector2, pt_b: Vector2, width: float, vertices: Packe
 	var vt_3 = pt_b - norm*width*0.5
 	
 	var line_w = 0.05
+	var uv_x_0 = idx as float/NUM_SEGMENTS
+	var uv_x_1 = (idx + 1 as float)/NUM_SEGMENTS
 	
 	# triangle one (note clockwise order)
 	vertices.push_back(vt_0)
-	uvs.push_back(Vector2(0.0, 0.0))
+	uvs.push_back(Vector2(uv_x_0, 0.0))
 	vertices.push_back(vt_3)
-	uvs.push_back(Vector2(1.0, 1.0))
+	uvs.push_back(Vector2(uv_x_1, 1.0))
 	vertices.push_back(vt_1)
-	uvs.push_back(Vector2(0.0, 1.0))
+	uvs.push_back(Vector2(uv_x_0, 1.0))
 	
 	vertices.push_back(vt_0)
-	uvs.push_back(Vector2(0.0, 0.0))
+	uvs.push_back(Vector2(uv_x_0, 0.0))
 	vertices.push_back(vt_2)
-	uvs.push_back(Vector2(1.0, 0.0))
+	uvs.push_back(Vector2(uv_x_1, 0.0))
 	vertices.push_back(vt_3)
-	uvs.push_back(Vector2(1.0, 1.0))
+	uvs.push_back(Vector2(uv_x_1, 1.0))
 	
 func _draw_control_point_line(pt_a: Vector2, pt_b: Vector2, color: Color = Color.MEDIUM_PURPLE) -> Vector2:
 	draw_line(pt_a, pt_b, color)
