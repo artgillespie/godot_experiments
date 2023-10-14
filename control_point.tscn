@@ -14,8 +14,10 @@ script = ExtResource("1_as8t1")
 shape = SubResource("RectangleShape2D_sfb08")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="Label" type="Label" parent="CanvasLayer"]
+visible = false
 offset_left = -31.0
 offset_top = -21.0
 offset_right = 9.0
