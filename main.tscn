@@ -1,9 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://ckrhqalaloppx"]
+[gd_scene load_steps=20 format=3 uid="uid://ckrhqalaloppx"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_pki4k"]
 [ext_resource type="Material" uid="uid://ctnw417lldvaw" path="res://mat_gizmo_green.tres" id="2_hxb88"]
 [ext_resource type="Texture2D" uid="uid://hmpw546lyvhc" path="res://addons/kenney_prototype_textures/dark/texture_01.png" id="2_un22j"]
-[ext_resource type="Script" path="res://Camera3D.gd" id="2_y68gb"]
+[ext_resource type="PackedScene" uid="uid://cnox0boigxtlf" path="res://orbital_camera.tscn" id="3_e7nsw"]
 [ext_resource type="PackedScene" uid="uid://djfl620ctbvmb" path="res://ui.tscn" id="3_t6jel"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1aqid"]
@@ -30,14 +30,35 @@ size = Vector3(160, 1, 160)
 [sub_resource type="BoxShape3D" id="BoxShape3D_cbjfg"]
 size = Vector3(160, 1, 160)
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_4dcsn"]
-material = ExtResource("2_hxb88")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lvvgc"]
+albedo_color = Color(0.0313726, 0.988235, 0.168627, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_e5mr6"]
+material = SubResource("StandardMaterial3D_lvvgc")
 top_radius = 0.01
 bottom_radius = 0.01
 height = 1.5
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_fwssi"]
 material = ExtResource("2_hxb88")
+top_radius = 0.0
+bottom_radius = 0.02
+height = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8grlf"]
+albedo_color = Color(0.0313726, 0.266667, 1, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4dcsn"]
+material = SubResource("StandardMaterial3D_8grlf")
+top_radius = 0.01
+bottom_radius = 0.01
+height = 1.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_abu7k"]
+albedo_color = Color(0, 0, 0.929412, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ccvi7"]
+material = SubResource("StandardMaterial3D_abu7k")
 top_radius = 0.0
 bottom_radius = 0.02
 height = 0.25
@@ -56,6 +77,7 @@ shadow_enabled = true
 
 [node name="Floor" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, -0.5, 2.08165e-12)
+visible = false
 mesh = SubResource("BoxMesh_egsa2")
 
 [node name="Area3D" type="Area3D" parent="Floor"]
@@ -63,9 +85,7 @@ mesh = SubResource("BoxMesh_egsa2")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/Area3D"]
 shape = SubResource("BoxShape3D_cbjfg")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, -5.95416e-16, 2.4663e-16, 2.4663e-16, 0.707107, 0.707107, -5.95416e-16, -0.707107, 0.707107, 2.08165e-12, 15, 15)
-script = ExtResource("2_y68gb")
+[node name="OrbitalCamera" parent="." instance=ExtResource("3_e7nsw")]
 
 [node name="Gizmo" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0406184, 0)
@@ -75,15 +95,28 @@ transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Gizmo/Y"]
 cast_shadow = 0
-mesh = SubResource("CylinderMesh_4dcsn")
+mesh = SubResource("CylinderMesh_e5mr6")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Gizmo/Y"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 0.75, 2.08165e-12)
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_fwssi")
 
+[node name="Z" type="Node3D" parent="Gizmo"]
+transform = Transform3D(8, 0, -1.21968e-22, -1.21968e-22, -3.49691e-07, -8, 0, 8, -3.49691e-07, 2.08165e-12, 0, 5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Gizmo/Z"]
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_4dcsn")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Gizmo/Z"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 0.75, 2.08165e-12)
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_ccvi7")
+
 [node name="Cube" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.5, -10)
+visible = false
 mesh = SubResource("BoxMesh_x1kkc")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]

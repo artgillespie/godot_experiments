@@ -55,12 +55,11 @@ func _update_tx():
 func _input(e: InputEvent):
 	if e is InputEventMouseButton:
 		if e.button_index == MOUSE_BUTTON_WHEEL_UP:
-			DISTANCE -= 0.1
+			DISTANCE -= 0.5
+			_update_tx()
 		elif e.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			DISTANCE += 0.1
-		if e.button_index == MOUSE_BUTTON_LEFT and e.shift_pressed:
-			# pick a new point of interest
-			pass
+			DISTANCE += 0.5
+			_update_tx()
 		return
 	if e is InputEventPanGesture:
 		e = e as InputEventPanGesture
