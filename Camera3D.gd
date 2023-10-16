@@ -30,7 +30,6 @@ func _set_poi(v: Vector3):
 	poi = v
 	# TODO: Tween Me
 	look_at(poi)
-	DISTANCE = position.distance_to(poi)
 	_update_tx()
 
 func _get_orbital_rotation() -> Vector2:

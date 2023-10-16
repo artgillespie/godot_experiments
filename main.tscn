@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://ckrhqalaloppx"]
+[gd_scene load_steps=22 format=3 uid="uid://ckrhqalaloppx"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_pki4k"]
 [ext_resource type="Material" uid="uid://ctnw417lldvaw" path="res://mat_gizmo_green.tres" id="2_hxb88"]
@@ -65,6 +65,12 @@ height = 0.25
 
 [sub_resource type="BoxMesh" id="BoxMesh_x1kkc"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y7ufj"]
+albedo_color = Color(0.0431373, 1, 0.0156863, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_0lw6e"]
+material = SubResource("StandardMaterial3D_y7ufj")
+
 [node name="Main" type="Node3D"]
 script = ExtResource("1_pki4k")
 
@@ -77,7 +83,6 @@ shadow_enabled = true
 
 [node name="Floor" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, -0.5, 2.08165e-12)
-visible = false
 mesh = SubResource("BoxMesh_egsa2")
 
 [node name="Area3D" type="Area3D" parent="Floor"]
@@ -86,6 +91,7 @@ mesh = SubResource("BoxMesh_egsa2")
 shape = SubResource("BoxShape3D_cbjfg")
 
 [node name="OrbitalCamera" parent="." instance=ExtResource("3_e7nsw")]
+DISTANCE = 50.0
 
 [node name="Gizmo" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0406184, 0)
@@ -124,5 +130,12 @@ mesh = SubResource("BoxMesh_x1kkc")
 [node name="UI" parent="CanvasLayer" instance=ExtResource("3_t6jel")]
 
 [node name="Procedural" type="Node3D" parent="."]
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+debug_shape_custom_color = Color(1, 0, 0, 1)
+debug_shape_thickness = 5
+
+[node name="RaySphereViz" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_0lw6e")
 
 [connection signal="input_event" from="Floor/Area3D" to="." method="_on_area_3d_input_event"]

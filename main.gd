@@ -42,19 +42,31 @@ var UVS = [Vector2(0,0), Vector2(1,1), Vector2(0,1), Vector2(0,0), Vector2(1,0),
 var VOXEL_GRID_SIZE: int = 16
 var voxel_grid: Array = []
 
+@onready var ray = $RayCast3D
+
+class HitTestResult:
+	var hit: bool
+	var where: Vector3
+
 func _init():
 	voxel_grid.clear()
 	voxel_grid.resize(VOXEL_GRID_SIZE*VOXEL_GRID_SIZE*VOXEL_GRID_SIZE)
 	fill_grid(true)
+	set_voxel(0,0, 0, false)
+	set_voxel(0,1,0,false)
+	set_voxel(0,15, 0, false)
+	set_voxel(15,15, 0, false)
 
 func _ready():
 	$OrbitalCamera.poi = Vector3(0,0,0)
 	var mesh_instance = _make_mesh()
 	mesh_instance.position = Vector3(0,1,0)
 	$Procedural.add_child(mesh_instance)
+
 	voxel_grid.clear()
 	voxel_grid.resize(VOXEL_GRID_SIZE*VOXEL_GRID_SIZE*VOXEL_GRID_SIZE)
 	fill_grid(true)
+	set_voxel(0,0, 0, false)
 	
 func fill_grid(v: bool):
 	for i in range(VOXEL_GRID_SIZE):
@@ -121,3 +133,59 @@ func _make_face(pos, face, normal, vertices: PackedVector3Array, indices: Packed
 func _on_area_3d_input_event(camera, event, position, normal, shape_idx):
 	# called when a mouse click "hits" the floor
 	pass
+	
+func intersects(ray_origin: Vector3, ray_norm: Vector3, inv_norm: Vector3) -> HitTestResult:
+	var tmin = -INF
+	var tmax = INF
+	
+	var tx1 = (0.0 - ray_origin.x) * inv_norm.x
+	var tx2 = (VOXEL_GRID_SIZE - ray_origin.x) * inv_norm.x
+	tmin = max(tmin, min(tx1, tx2))
+	tmax = min(tmax, max(tx1, tx2))
+
+	tx1 = (0.0 - ray_origin.y) * inv_norm.y
+	tx2 = (VOXEL_GRID_SIZE - ray_origin.y) * inv_norm.y
+	tmin = max(tmin, min(tx1, tx2))
+	tmax = min(tmax, max(tx1, tx2))	
+	
+	tx1 = (0.0 - ray_origin.z) * inv_norm.z
+	tx2 = (VOXEL_GRID_SIZE - ray_origin.z) * inv_norm.z
+	tmin = max(tmin, min(tx1, tx2))
+	tmax = min(tmax, max(tx1, tx2))	
+
+	var result = HitTestResult.new()
+	result.hit = tmax >= tmin
+	if result.hit:
+		result.where = ray_origin + ray_norm * tmin
+	else:
+		result.where = Vector3()
+	return result
+
+func _input(evt: InputEvent):
+	if evt is InputEventMouseButton:
+		if evt.is_pressed() and evt.shift_pressed:
+			# cast a ray into the scene and see if it's hitting our mesh
+			var cam = $OrbitalCamera
+			var mousepos = get_viewport().get_mouse_position()
+	
+			var origin = cam.project_ray_origin(mousepos)
+			var end = origin + cam.project_ray_normal(mousepos) * 1000
+
+			var normal = cam.project_ray_normal(mousepos)
+			var inv_normal = normal.inverse()
+			ray.transform.origin = origin
+			ray.target_position = end
+			var hit = intersects(origin, normal, inv_normal)
+			print("intersects: ", hit.hit, ", ", hit.where)
+			if hit.hit:
+				$RaySphereViz.visible = true
+				$RaySphereViz.position = hit.where - normal * 0.5
+			else:
+				$RaySphereViz.visible = false
+				
+				
+			
+			
+						
+			
+		
